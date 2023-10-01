@@ -12,8 +12,8 @@ cd $(dirname $(dirname $SCRIPT_DIR))
 OUTPUT=$1
 # Below are external programs that should be included in the local validator.
 # The program IDs and binary names should be listed in the same order.
-EXTERNAL_ID=("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s" "noopb9bkMVfRPU8AsbpTUg8AQkHtKwMYZiFUjNRtMmV")
-EXTERNAL_SO=("mpl_token_metadata.so" "spl_noop.so")
+EXTERNAL_ID=()
+EXTERNAL_SO=()
 
 if [ -z ${RPC+x} ]; then
     RPC="https://api.mainnet-beta.solana.com"
@@ -39,9 +39,9 @@ for i in ${!EXTERNAL_ID[@]}; do
     if [ ! -f "${OUTPUT}/${EXTERNAL_SO[$i]}" ]; then
         solana program dump -u $RPC ${EXTERNAL_ID[$i]} ${OUTPUT}/${EXTERNAL_SO[$i]}
     else
-        solana program dump -u $RPC ${EXTERNAL_ID[$i]} ${OUTPUT}/onchain-${EXTERNAL_SO[$i]} > /dev/null
-        ON_CHAIN=`sha256sum -b ${OUTPUT}/onchain-${EXTERNAL_SO[$i]} | cut -d ' ' -f 1`
-        LOCAL=`sha256sum -b ${OUTPUT}/${EXTERNAL_SO[$i]} | cut -d ' ' -f 1`
+        solana program dump -u $RPC ${EXTERNAL_ID[$i]} ${OUTPUT}/onchain-${EXTERNAL_SO[$i]} >/dev/null
+        ON_CHAIN=$(sha256sum -b ${OUTPUT}/onchain-${EXTERNAL_SO[$i]} | cut -d ' ' -f 1)
+        LOCAL=$(sha256sum -b ${OUTPUT}/${EXTERNAL_SO[$i]} | cut -d ' ' -f 1)
 
         if [ "$ON_CHAIN" != "$LOCAL" ]; then
             echo $(RED "[ WARNING ] on-chain and local binaries are different for '${EXTERNAL_SO[$i]}'")
