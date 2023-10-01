@@ -3,50 +3,216 @@
   "name": "loris_trustpilot",
   "instructions": [
     {
-      "name": "Create",
+      "name": "CreateDomain",
       "accounts": [
-        {
-          "name": "address",
-          "isMut": true,
-          "isSigner": true,
-          "desc": "The address of the new account"
-        },
-        {
-          "name": "authority",
-          "isMut": false,
-          "isSigner": false,
-          "desc": "The authority of the new account"
-        },
         {
           "name": "payer",
           "isMut": true,
           "isSigner": true,
-          "desc": "The account paying for the storage fees"
+          "docs": [
+            "The account paying for the storage fees"
+          ]
+        },
+        {
+          "name": "domain",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "The domain PDA. Seeds: ['domain', domain string]"
+          ]
         },
         {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false,
-          "desc": "The system program"
+          "docs": [
+            "The system program"
+          ]
         }
       ],
       "args": [
         {
-          "name": "createArgs",
-          "type": {
-            "defined": "CreateArgs"
-          }
+          "name": "domainName",
+          "type": "string"
         }
       ],
       "discriminant": {
         "type": "u8",
         "value": 0
       }
+    },
+    {
+      "name": "WriteReview",
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "The account paying for the storage fees"
+          ]
+        },
+        {
+          "name": "reviewer",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "The account reviewing the domain"
+          ]
+        },
+        {
+          "name": "domain",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "The domain PDA. Seeds: ['domain', domain string]"
+          ]
+        },
+        {
+          "name": "review",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "The review PDA. Seeds: ['review', domain PDA, reviewer]"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "The system program"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "stars",
+          "type": "u8"
+        },
+        {
+          "name": "comment",
+          "type": "string"
+        }
+      ],
+      "discriminant": {
+        "type": "u8",
+        "value": 1
+      }
+    },
+    {
+      "name": "UpdateReview",
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "The account paying for the storage fees"
+          ]
+        },
+        {
+          "name": "reviewer",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "The account reviewing the domain"
+          ]
+        },
+        {
+          "name": "domain",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "The domain PDA. Seeds: ['domain', domain string]"
+          ]
+        },
+        {
+          "name": "review",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "The review PDA. Seeds: ['review', domain PDA, reviewer]"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "The system program"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "stars",
+          "type": "u8"
+        },
+        {
+          "name": "comment",
+          "type": "string"
+        }
+      ],
+      "discriminant": {
+        "type": "u8",
+        "value": 2
+      }
+    },
+    {
+      "name": "DeleteReview",
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "The account paying for the storage fees"
+          ]
+        },
+        {
+          "name": "reviewer",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "The account reviewing the domain"
+          ]
+        },
+        {
+          "name": "domain",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "The domain PDA. Seeds: ['domain', domain string]"
+          ]
+        },
+        {
+          "name": "review",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "The review PDA. Seeds: ['review', domain PDA, reviewer]"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "The system program"
+          ]
+        }
+      ],
+      "args": [],
+      "discriminant": {
+        "type": "u8",
+        "value": 3
+      }
     }
   ],
   "accounts": [
     {
-      "name": "MyAccount",
+      "name": "Domain",
       "type": {
         "kind": "struct",
         "fields": [
@@ -57,20 +223,28 @@
             }
           },
           {
-            "name": "authority",
-            "type": "publicKey"
+            "name": "totalStars",
+            "type": "u64"
           },
           {
-            "name": "data",
+            "name": "totalReviews",
+            "type": "u64"
+          },
+          {
+            "name": "reviewers",
             "type": {
-              "defined": "MyData"
+              "vec": "publicKey"
             }
+          },
+          {
+            "name": "domainName",
+            "type": "string"
           }
         ]
       }
     },
     {
-      "name": "MyPdaAccount",
+      "name": "Review",
       "type": {
         "kind": "struct",
         "fields": [
@@ -81,46 +255,34 @@
             }
           },
           {
-            "name": "bump",
+            "name": "stars",
             "type": "u8"
+          },
+          {
+            "name": "createdAt",
+            "type": "i64"
+          },
+          {
+            "name": "updatedAt",
+            "type": "i64"
+          },
+          {
+            "name": "reviewer",
+            "type": "publicKey"
+          },
+          {
+            "name": "domain",
+            "type": "publicKey"
+          },
+          {
+            "name": "comment",
+            "type": "string"
           }
         ]
       }
     }
   ],
   "types": [
-    {
-      "name": "CreateArgs",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "foo",
-            "type": "u16"
-          },
-          {
-            "name": "bar",
-            "type": "u32"
-          }
-        ]
-      }
-    },
-    {
-      "name": "MyData",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "foo",
-            "type": "u16"
-          },
-          {
-            "name": "bar",
-            "type": "u32"
-          }
-        ]
-      }
-    },
     {
       "name": "Key",
       "type": {
@@ -130,10 +292,10 @@
             "name": "Uninitialized"
           },
           {
-            "name": "MyAccount"
+            "name": "Domain"
           },
           {
-            "name": "MyPdaAccount"
+            "name": "Review"
           }
         ]
       }
@@ -142,24 +304,64 @@
   "errors": [
     {
       "code": 0,
-      "name": "InvalidSystemProgram",
-      "msg": "Invalid System Program"
+      "name": "DeserializationError",
+      "msg": "Error deserializing an account"
     },
     {
       "code": 1,
-      "name": "DeserializationError",
-      "msg": "Error deserializing account"
+      "name": "SerializationError",
+      "msg": "Error serializing an account"
     },
     {
       "code": 2,
-      "name": "SerializationError",
-      "msg": "Error serializing account"
+      "name": "InvalidProgramOwner",
+      "msg": "Invalid program owner. This likely mean the provided account does not exist"
+    },
+    {
+      "code": 3,
+      "name": "InvalidPda",
+      "msg": "Invalid PDA derivation"
+    },
+    {
+      "code": 4,
+      "name": "ExpectedEmptyAccount",
+      "msg": "Expected empty account"
+    },
+    {
+      "code": 5,
+      "name": "ExpectedNonEmptyAccount",
+      "msg": "Expected non empty account"
+    },
+    {
+      "code": 6,
+      "name": "ExpectedSignerAccount",
+      "msg": "Expected signer account"
+    },
+    {
+      "code": 7,
+      "name": "ExpectedWritableAccount",
+      "msg": "Expected writable account"
+    },
+    {
+      "code": 8,
+      "name": "AccountMismatch",
+      "msg": "Account mismatch"
+    },
+    {
+      "code": 9,
+      "name": "InvalidAccountKey",
+      "msg": "Invalid account key"
+    },
+    {
+      "code": 10,
+      "name": "NumericalOverflow",
+      "msg": "Numerical overflow"
     }
   ],
   "metadata": {
     "origin": "shank",
     "address": "6BvjJHhheqrQpNFkYKAMtd1B7FPTBpxp1QncnwsH3mE7",
-    "binaryVersion": "0.0.12",
-    "libVersion": "0.0.12"
+    "binaryVersion": "0.2.0",
+    "libVersion": "0.2.0"
   }
 }

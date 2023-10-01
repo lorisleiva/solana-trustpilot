@@ -6,4 +6,7 @@
  * @see https://github.com/metaplex-foundation/kinobi
  */
 
-export * from './create';
+export * from './createDomain';
+export * from './deleteReview';
+export * from './updateReview';
+export * from './writeReview';

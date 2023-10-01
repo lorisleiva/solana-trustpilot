@@ -15,44 +15,152 @@ type ProgramErrorConstructor = new (
 const codeToErrorMap: Map<number, ProgramErrorConstructor> = new Map();
 const nameToErrorMap: Map<string, ProgramErrorConstructor> = new Map();
 
-/** InvalidSystemProgram: Invalid System Program */
-export class InvalidSystemProgramError extends ProgramError {
-  readonly name: string = 'InvalidSystemProgram';
+/** DeserializationError: Error deserializing an account */
+export class DeserializationErrorError extends ProgramError {
+  readonly name: string = 'DeserializationError';
 
   readonly code: number = 0x0; // 0
 
   constructor(program: Program, cause?: Error) {
-    super('Invalid System Program', program, cause);
+    super('Error deserializing an account', program, cause);
   }
 }
-codeToErrorMap.set(0x0, InvalidSystemProgramError);
-nameToErrorMap.set('InvalidSystemProgram', InvalidSystemProgramError);
+codeToErrorMap.set(0x0, DeserializationErrorError);
+nameToErrorMap.set('DeserializationError', DeserializationErrorError);
 
-/** DeserializationError: Error deserializing account */
-export class DeserializationErrorError extends ProgramError {
-  readonly name: string = 'DeserializationError';
+/** SerializationError: Error serializing an account */
+export class SerializationErrorError extends ProgramError {
+  readonly name: string = 'SerializationError';
 
   readonly code: number = 0x1; // 1
 
   constructor(program: Program, cause?: Error) {
-    super('Error deserializing account', program, cause);
+    super('Error serializing an account', program, cause);
   }
 }
-codeToErrorMap.set(0x1, DeserializationErrorError);
-nameToErrorMap.set('DeserializationError', DeserializationErrorError);
+codeToErrorMap.set(0x1, SerializationErrorError);
+nameToErrorMap.set('SerializationError', SerializationErrorError);
 
-/** SerializationError: Error serializing account */
-export class SerializationErrorError extends ProgramError {
-  readonly name: string = 'SerializationError';
+/** InvalidProgramOwner: Invalid program owner. This likely mean the provided account does not exist */
+export class InvalidProgramOwnerError extends ProgramError {
+  readonly name: string = 'InvalidProgramOwner';
 
   readonly code: number = 0x2; // 2
 
   constructor(program: Program, cause?: Error) {
-    super('Error serializing account', program, cause);
+    super(
+      'Invalid program owner. This likely mean the provided account does not exist',
+      program,
+      cause
+    );
   }
 }
-codeToErrorMap.set(0x2, SerializationErrorError);
-nameToErrorMap.set('SerializationError', SerializationErrorError);
+codeToErrorMap.set(0x2, InvalidProgramOwnerError);
+nameToErrorMap.set('InvalidProgramOwner', InvalidProgramOwnerError);
+
+/** InvalidPda: Invalid PDA derivation */
+export class InvalidPdaError extends ProgramError {
+  readonly name: string = 'InvalidPda';
+
+  readonly code: number = 0x3; // 3
+
+  constructor(program: Program, cause?: Error) {
+    super('Invalid PDA derivation', program, cause);
+  }
+}
+codeToErrorMap.set(0x3, InvalidPdaError);
+nameToErrorMap.set('InvalidPda', InvalidPdaError);
+
+/** ExpectedEmptyAccount: Expected empty account */
+export class ExpectedEmptyAccountError extends ProgramError {
+  readonly name: string = 'ExpectedEmptyAccount';
+
+  readonly code: number = 0x4; // 4
+
+  constructor(program: Program, cause?: Error) {
+    super('Expected empty account', program, cause);
+  }
+}
+codeToErrorMap.set(0x4, ExpectedEmptyAccountError);
+nameToErrorMap.set('ExpectedEmptyAccount', ExpectedEmptyAccountError);
+
+/** ExpectedNonEmptyAccount: Expected non empty account */
+export class ExpectedNonEmptyAccountError extends ProgramError {
+  readonly name: string = 'ExpectedNonEmptyAccount';
+
+  readonly code: number = 0x5; // 5
+
+  constructor(program: Program, cause?: Error) {
+    super('Expected non empty account', program, cause);
+  }
+}
+codeToErrorMap.set(0x5, ExpectedNonEmptyAccountError);
+nameToErrorMap.set('ExpectedNonEmptyAccount', ExpectedNonEmptyAccountError);
+
+/** ExpectedSignerAccount: Expected signer account */
+export class ExpectedSignerAccountError extends ProgramError {
+  readonly name: string = 'ExpectedSignerAccount';
+
+  readonly code: number = 0x6; // 6
+
+  constructor(program: Program, cause?: Error) {
+    super('Expected signer account', program, cause);
+  }
+}
+codeToErrorMap.set(0x6, ExpectedSignerAccountError);
+nameToErrorMap.set('ExpectedSignerAccount', ExpectedSignerAccountError);
+
+/** ExpectedWritableAccount: Expected writable account */
+export class ExpectedWritableAccountError extends ProgramError {
+  readonly name: string = 'ExpectedWritableAccount';
+
+  readonly code: number = 0x7; // 7
+
+  constructor(program: Program, cause?: Error) {
+    super('Expected writable account', program, cause);
+  }
+}
+codeToErrorMap.set(0x7, ExpectedWritableAccountError);
+nameToErrorMap.set('ExpectedWritableAccount', ExpectedWritableAccountError);
+
+/** AccountMismatch: Account mismatch */
+export class AccountMismatchError extends ProgramError {
+  readonly name: string = 'AccountMismatch';
+
+  readonly code: number = 0x8; // 8
+
+  constructor(program: Program, cause?: Error) {
+    super('Account mismatch', program, cause);
+  }
+}
+codeToErrorMap.set(0x8, AccountMismatchError);
+nameToErrorMap.set('AccountMismatch', AccountMismatchError);
+
+/** InvalidAccountKey: Invalid account key */
+export class InvalidAccountKeyError extends ProgramError {
+  readonly name: string = 'InvalidAccountKey';
+
+  readonly code: number = 0x9; // 9
+
+  constructor(program: Program, cause?: Error) {
+    super('Invalid account key', program, cause);
+  }
+}
+codeToErrorMap.set(0x9, InvalidAccountKeyError);
+nameToErrorMap.set('InvalidAccountKey', InvalidAccountKeyError);
+
+/** NumericalOverflow: Numerical overflow */
+export class NumericalOverflowError extends ProgramError {
+  readonly name: string = 'NumericalOverflow';
+
+  readonly code: number = 0xa; // 10
+
+  constructor(program: Program, cause?: Error) {
+    super('Numerical overflow', program, cause);
+  }
+}
+codeToErrorMap.set(0xa, NumericalOverflowError);
+nameToErrorMap.set('NumericalOverflow', NumericalOverflowError);
 
 /**
  * Attempts to resolve a custom program error from the provided error code.
