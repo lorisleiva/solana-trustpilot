@@ -11,24 +11,36 @@ use crate::error::LorisTrustpilotError;
 #[derive(Clone, BorshSerialize, BorshDeserialize, Debug)]
 pub enum Key {
     Uninitialized,
-    MyAccount,
-    MyPdaAccount,
+    Domain,
+    Review,
 }
 
 #[repr(C)]
 #[derive(Clone, BorshSerialize, BorshDeserialize, Debug, ShankAccount)]
-pub struct MyAccount {
+pub struct Domain {
     pub key: Key,
-    pub authority: Pubkey,
-    pub data: MyData,
+    pub total_stars: u64,
+    pub total_reviews: u64,
+    pub reviewers: Vec<Pubkey>,
+    pub domain_name: String,
 }
 
-impl MyAccount {
-    pub const LEN: usize = 1 + 32 + MyData::LEN;
+impl Domain {
+    pub fn len(&self) -> usize {
+        1 + 8 + 8 + 4 + self.reviewers.len() * 32 + 4 + self.domain_name.len()
+    }
+
+    pub fn seeds(domain_name: &String) -> Vec<&[u8]> {
+        vec!["domain".as_bytes(), domain_name.as_ref()]
+    }
+
+    pub fn find_pda(domain_name: &String) -> (Pubkey, u8) {
+        Pubkey::find_program_address(&Self::seeds(domain_name), &crate::ID)
+    }
 
     pub fn load(account: &AccountInfo) -> Result<Self, ProgramError> {
         let mut bytes: &[u8] = &(*account.data).borrow();
-        MyAccount::deserialize(&mut bytes).map_err(|error| {
+        Domain::deserialize(&mut bytes).map_err(|error| {
             msg!("Error: {}", error);
             LorisTrustpilotError::DeserializationError.into()
         })
@@ -47,17 +59,40 @@ impl MyAccount {
 
 #[repr(C)]
 #[derive(Clone, BorshSerialize, BorshDeserialize, Debug, ShankAccount)]
-pub struct MyPdaAccount {
+pub struct Review {
     pub key: Key,
-    pub bump: u8,
+    pub stars: u8,
+    pub created_at: i64,
+    pub updated_at: i64,
+    pub reviewer: Pubkey,
+    pub domain: Pubkey,
+    pub comment: String,
 }
 
-#[derive(Clone, BorshSerialize, BorshDeserialize, Debug)]
-pub struct MyData {
-    pub foo: u16,
-    pub bar: u32,
-}
+impl Review {
+    pub fn len(&self) -> usize {
+        1 + 1 + 8 + 8 + 32 + 32 + 4 + self.comment.len()
+    }
 
-impl MyData {
-    pub const LEN: usize = 2 + 4;
+    pub fn seeds<'a>(domain: &'a Pubkey, reviewer: &'a Pubkey) -> Vec<&'a [u8]> {
+        vec!["review".as_bytes(), domain.as_ref(), reviewer.as_ref()]
+    }
+
+    pub fn load(account: &AccountInfo) -> Result<Self, ProgramError> {
+        let mut bytes: &[u8] = &(*account.data).borrow();
+        Review::deserialize(&mut bytes).map_err(|error| {
+            msg!("Error: {}", error);
+            LorisTrustpilotError::DeserializationError.into()
+        })
+    }
+
+    pub fn save(&self, account: &AccountInfo) -> ProgramResult {
+        let mut bytes = Vec::with_capacity(account.data_len());
+        self.serialize(&mut bytes).map_err(|error| {
+            msg!("Error: {}", error);
+            LorisTrustpilotError::SerializationError
+        })?;
+        account.try_borrow_mut_data().unwrap()[..bytes.len()].copy_from_slice(&bytes);
+        Ok(())
+    }
 }
