@@ -13,22 +13,22 @@ import {
   PublicKey,
 } from '@metaplex-foundation/umi';
 import {
-  getMplProjectNameErrorFromCode,
-  getMplProjectNameErrorFromName,
+  getLorisTrustpilotErrorFromCode,
+  getLorisTrustpilotErrorFromName,
 } from '../errors';
 
-export const MPL_PROJECT_NAME_PROGRAM_ID =
-  'MyProgram1111111111111111111111111111111111' as PublicKey<'MyProgram1111111111111111111111111111111111'>;
+export const LORIS_TRUSTPILOT_PROGRAM_ID =
+  '6BvjJHhheqrQpNFkYKAMtd1B7FPTBpxp1QncnwsH3mE7' as PublicKey<'6BvjJHhheqrQpNFkYKAMtd1B7FPTBpxp1QncnwsH3mE7'>;
 
-export function createMplProjectNameProgram(): Program {
+export function createLorisTrustpilotProgram(): Program {
   return {
-    name: 'mplProjectName',
-    publicKey: MPL_PROJECT_NAME_PROGRAM_ID,
+    name: 'lorisTrustpilot',
+    publicKey: LORIS_TRUSTPILOT_PROGRAM_ID,
     getErrorFromCode(code: number, cause?: Error) {
-      return getMplProjectNameErrorFromCode(code, this, cause);
+      return getLorisTrustpilotErrorFromCode(code, this, cause);
     },
     getErrorFromName(name: string, cause?: Error) {
-      return getMplProjectNameErrorFromName(name, this, cause);
+      return getLorisTrustpilotErrorFromName(name, this, cause);
     },
     isOnCluster() {
       return true;
@@ -36,20 +36,20 @@ export function createMplProjectNameProgram(): Program {
   };
 }
 
-export function getMplProjectNameProgram<T extends Program = Program>(
+export function getLorisTrustpilotProgram<T extends Program = Program>(
   context: Pick<Context, 'programs'>,
   clusterFilter?: ClusterFilter
 ): T {
-  return context.programs.get<T>('mplProjectName', clusterFilter);
+  return context.programs.get<T>('lorisTrustpilot', clusterFilter);
 }
 
-export function getMplProjectNameProgramId(
+export function getLorisTrustpilotProgramId(
   context: Pick<Context, 'programs'>,
   clusterFilter?: ClusterFilter
 ): PublicKey {
   return context.programs.getPublicKey(
-    'mplProjectName',
-    MPL_PROJECT_NAME_PROGRAM_ID,
+    'lorisTrustpilot',
+    LORIS_TRUSTPILOT_PROGRAM_ID,
     clusterFilter
   );
 }

@@ -1,8 +1,8 @@
 import { UmiPlugin } from '@metaplex-foundation/umi';
-import { createMplProjectNameProgram } from './generated';
+import { createLorisTrustpilotProgram } from './generated';
 
-export const mplProjectName = (): UmiPlugin => ({
+export const lorisTrustpilot = (): UmiPlugin => ({
   install(umi) {
-    umi.programs.add(createMplProjectNameProgram(), false);
+    umi.programs.add(createLorisTrustpilotProgram(), false);
   },
 });

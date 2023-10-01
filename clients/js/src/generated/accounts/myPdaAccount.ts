@@ -136,8 +136,8 @@ export function getMyPdaAccountGpaBuilder(
   context: Pick<Context, 'rpc' | 'programs'>
 ) {
   const programId = context.programs.getPublicKey(
-    'mplProjectName',
-    'MyProgram1111111111111111111111111111111111'
+    'lorisTrustpilot',
+    '6BvjJHhheqrQpNFkYKAMtd1B7FPTBpxp1QncnwsH3mE7'
   );
   return gpaBuilder(context, programId)
     .registerFields<{ key: KeyArgs; bump: number }>({
@@ -164,8 +164,8 @@ export function findMyPdaAccountPda(
   }
 ): Pda {
   const programId = context.programs.getPublicKey(
-    'mplProjectName',
-    'MyProgram1111111111111111111111111111111111'
+    'lorisTrustpilot',
+    '6BvjJHhheqrQpNFkYKAMtd1B7FPTBpxp1QncnwsH3mE7'
   );
   return context.eddsa.findPda(programId, [
     string({ size: 'variable' }).serialize('myPdaAccount'),

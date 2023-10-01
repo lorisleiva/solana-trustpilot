@@ -85,8 +85,8 @@ export function create(
 
   // Program ID.
   const programId = context.programs.getPublicKey(
-    'mplProjectName',
-    'MyProgram1111111111111111111111111111111111'
+    'lorisTrustpilot',
+    '6BvjJHhheqrQpNFkYKAMtd1B7FPTBpxp1QncnwsH3mE7'
   );
 
   // Resolved inputs.

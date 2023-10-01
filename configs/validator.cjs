@@ -11,9 +11,9 @@ module.exports = {
     commitment: "processed",
     programs: [
       {
-        label: "Mpl Project Name",
-        programId: "MyProgram1111111111111111111111111111111111",
-        deployPath: getProgram("mpl_project_name.so"),
+        label: "Loris Trustpilot",
+        programId: "6BvjJHhheqrQpNFkYKAMtd1B7FPTBpxp1QncnwsH3mE7",
+        deployPath: getProgram("loris_trustpilot.so"),
       },
       // Below are external programs that should be included in the local validator.
       // You may configure which ones to fetch from the cluster when building

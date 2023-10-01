@@ -1,6 +1,6 @@
-# Mpl Project Name
+# Loris Trustpilot
 
-My project description
+A trustless Trustpilot
 
 ## Building
 

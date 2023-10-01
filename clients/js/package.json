@@ -1,7 +1,7 @@
 {
-  "name": "@metaplex-foundation/mpl-project-name",
+  "name": "@metaplex-foundation/loris-trustpilot",
   "version": "0.1.0",
-  "description": "My project description",
+  "description": "A trustless Trustpilot",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
