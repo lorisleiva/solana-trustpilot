@@ -32,24 +32,27 @@ kinobi.update(
   new k.UpdateInstructionsVisitor({
     createDomain: {
       accounts: {
-        domain: {
-          defaultsTo: k.pdaDefault("domain"),
-        },
+        domain: { defaultsTo: k.pdaDefault("domain") },
       },
     },
     writeReview: {
       accounts: {
-        domain: {
-          defaultsTo: k.pdaDefault("domain"),
-        },
-        review: {
-          defaultsTo: k.pdaDefault("review"),
-        },
+        domain: { defaultsTo: k.pdaDefault("domain") },
+        review: { defaultsTo: k.pdaDefault("review") },
       },
       args: {
-        domainName: {
-          type: k.stringTypeNode(),
-        },
+        domainName: { type: k.stringTypeNode() },
+      },
+    },
+    updateReview: {
+      accounts: {
+        domain: { defaultsTo: k.pdaDefault("domain") },
+        review: { defaultsTo: k.pdaDefault("review") },
+      },
+      args: {
+        domainName: { type: k.stringTypeNode() },
+      },
+    },
       },
     },
   })
