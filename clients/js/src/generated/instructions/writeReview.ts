@@ -21,11 +21,12 @@ import {
   struct,
   u8,
 } from '@metaplex-foundation/umi/serializers';
-import { findReviewPda } from '../accounts';
+import { findDomainPda, findReviewPda } from '../accounts';
 import {
   ResolvedAccount,
   ResolvedAccountsWithIndices,
   expectPublicKey,
+  expectSome,
   getAccountMetasAndSigners,
 } from '../shared';
 
@@ -36,7 +37,7 @@ export type WriteReviewInstructionAccounts = {
   /** The account reviewing the domain */
   reviewer: Signer;
   /** The domain PDA. Seeds: ['domain', domain string] */
-  domain: PublicKey | Pda;
+  domain?: PublicKey | Pda;
   /** The review PDA. Seeds: ['review', domain PDA, reviewer] */
   review?: PublicKey | Pda;
   /** The system program */
@@ -73,8 +74,12 @@ export function getWriteReviewInstructionDataSerializer(): Serializer<
   ) as Serializer<WriteReviewInstructionDataArgs, WriteReviewInstructionData>;
 }
 
+// Extra Args.
+export type WriteReviewInstructionExtraArgs = { domainName: string };
+
 // Args.
-export type WriteReviewInstructionArgs = WriteReviewInstructionDataArgs;
+export type WriteReviewInstructionArgs = WriteReviewInstructionDataArgs &
+  WriteReviewInstructionExtraArgs;
 
 // Instruction.
 export function writeReview(
@@ -106,6 +111,11 @@ export function writeReview(
   // Default values.
   if (!resolvedAccounts.payer.value) {
     resolvedAccounts.payer.value = context.payer;
+  }
+  if (!resolvedAccounts.domain.value) {
+    resolvedAccounts.domain.value = findDomainPda(context, {
+      domainName: expectSome(resolvedArgs.domainName),
+    });
   }
   if (!resolvedAccounts.review.value) {
     resolvedAccounts.review.value = findReviewPda(context, {

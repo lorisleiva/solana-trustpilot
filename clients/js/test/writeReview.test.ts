@@ -18,19 +18,19 @@ test('it can write a review to an existing domain', async (t) => {
   const umi = await createUmi();
   const domainName = 'write-review.example.com';
   await createDomain(umi, { domainName }).sendAndConfirm(umi);
-  const [domainPda] = findDomainPda(umi, { domainName });
 
   // When a reviewer writes a review for the domain.
   const reviewer = await generateSignerWithSol(umi);
   await writeReview(umi, {
     payer: reviewer,
     reviewer,
-    domain: domainPda,
+    domainName,
     stars: 5,
     comment: 'Great stuff!',
   }).sendAndConfirm(umi);
 
   // Then an Review account was created with the correct data.
+  const [domainPda] = findDomainPda(umi, { domainName });
   t.like(await fetchDomain(umi, domainPda), <Domain>{
     publicKey: domainPda,
     key: Key.Domain,
@@ -62,12 +62,10 @@ test('it cannot write a review for a missing domain', async (t) => {
 
   // When a reviewer writes a review for a missing domain.
   const reviewer = await generateSignerWithSol(umi);
-  const domainName = 'missing.example.com';
-  const [domainPda] = findDomainPda(umi, { domainName });
   const promise = writeReview(umi, {
     payer: reviewer,
     reviewer,
-    domain: domainPda,
+    domainName: 'missing.example.com',
     stars: 5,
     comment: 'Great stuff!',
   }).sendAndConfirm(umi);
