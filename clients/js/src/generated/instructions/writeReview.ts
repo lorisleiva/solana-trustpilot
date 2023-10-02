@@ -93,7 +93,7 @@ export function writeReview(
   );
 
   // Accounts.
-  const resolvedAccounts: ResolvedAccountsWithIndices = {
+  const resolvedAccounts = {
     payer: { index: 0, isWritable: true, value: input.payer ?? null },
     reviewer: { index: 1, isWritable: false, value: input.reviewer ?? null },
     domain: { index: 2, isWritable: true, value: input.domain ?? null },
@@ -103,7 +103,7 @@ export function writeReview(
       isWritable: false,
       value: input.systemProgram ?? null,
     },
-  };
+  } satisfies ResolvedAccountsWithIndices;
 
   // Arguments.
   const resolvedArgs: WriteReviewInstructionArgs = { ...input };

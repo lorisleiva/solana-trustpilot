@@ -82,7 +82,7 @@ export function createDomain(
   );
 
   // Accounts.
-  const resolvedAccounts: ResolvedAccountsWithIndices = {
+  const resolvedAccounts = {
     payer: { index: 0, isWritable: true, value: input.payer ?? null },
     domain: { index: 1, isWritable: true, value: input.domain ?? null },
     systemProgram: {
@@ -90,7 +90,7 @@ export function createDomain(
       isWritable: false,
       value: input.systemProgram ?? null,
     },
-  };
+  } satisfies ResolvedAccountsWithIndices;
 
   // Arguments.
   const resolvedArgs: CreateDomainInstructionArgs = { ...input };

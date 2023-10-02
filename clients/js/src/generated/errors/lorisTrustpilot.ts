@@ -17,7 +17,7 @@ const nameToErrorMap: Map<string, ProgramErrorConstructor> = new Map();
 
 /** DeserializationError: Error deserializing an account */
 export class DeserializationErrorError extends ProgramError {
-  readonly name: string = 'DeserializationError';
+  override readonly name: string = 'DeserializationError';
 
   readonly code: number = 0x0; // 0
 
@@ -30,7 +30,7 @@ nameToErrorMap.set('DeserializationError', DeserializationErrorError);
 
 /** SerializationError: Error serializing an account */
 export class SerializationErrorError extends ProgramError {
-  readonly name: string = 'SerializationError';
+  override readonly name: string = 'SerializationError';
 
   readonly code: number = 0x1; // 1
 
@@ -43,7 +43,7 @@ nameToErrorMap.set('SerializationError', SerializationErrorError);
 
 /** InvalidProgramOwner: Invalid program owner. This likely mean the provided account does not exist */
 export class InvalidProgramOwnerError extends ProgramError {
-  readonly name: string = 'InvalidProgramOwner';
+  override readonly name: string = 'InvalidProgramOwner';
 
   readonly code: number = 0x2; // 2
 
@@ -60,7 +60,7 @@ nameToErrorMap.set('InvalidProgramOwner', InvalidProgramOwnerError);
 
 /** InvalidPda: Invalid PDA derivation */
 export class InvalidPdaError extends ProgramError {
-  readonly name: string = 'InvalidPda';
+  override readonly name: string = 'InvalidPda';
 
   readonly code: number = 0x3; // 3
 
@@ -73,7 +73,7 @@ nameToErrorMap.set('InvalidPda', InvalidPdaError);
 
 /** ExpectedEmptyAccount: Expected empty account */
 export class ExpectedEmptyAccountError extends ProgramError {
-  readonly name: string = 'ExpectedEmptyAccount';
+  override readonly name: string = 'ExpectedEmptyAccount';
 
   readonly code: number = 0x4; // 4
 
@@ -86,7 +86,7 @@ nameToErrorMap.set('ExpectedEmptyAccount', ExpectedEmptyAccountError);
 
 /** ExpectedNonEmptyAccount: Expected non empty account */
 export class ExpectedNonEmptyAccountError extends ProgramError {
-  readonly name: string = 'ExpectedNonEmptyAccount';
+  override readonly name: string = 'ExpectedNonEmptyAccount';
 
   readonly code: number = 0x5; // 5
 
@@ -99,7 +99,7 @@ nameToErrorMap.set('ExpectedNonEmptyAccount', ExpectedNonEmptyAccountError);
 
 /** ExpectedSignerAccount: Expected signer account */
 export class ExpectedSignerAccountError extends ProgramError {
-  readonly name: string = 'ExpectedSignerAccount';
+  override readonly name: string = 'ExpectedSignerAccount';
 
   readonly code: number = 0x6; // 6
 
@@ -112,7 +112,7 @@ nameToErrorMap.set('ExpectedSignerAccount', ExpectedSignerAccountError);
 
 /** ExpectedWritableAccount: Expected writable account */
 export class ExpectedWritableAccountError extends ProgramError {
-  readonly name: string = 'ExpectedWritableAccount';
+  override readonly name: string = 'ExpectedWritableAccount';
 
   readonly code: number = 0x7; // 7
 
@@ -125,7 +125,7 @@ nameToErrorMap.set('ExpectedWritableAccount', ExpectedWritableAccountError);
 
 /** AccountMismatch: Account mismatch */
 export class AccountMismatchError extends ProgramError {
-  readonly name: string = 'AccountMismatch';
+  override readonly name: string = 'AccountMismatch';
 
   readonly code: number = 0x8; // 8
 
@@ -138,7 +138,7 @@ nameToErrorMap.set('AccountMismatch', AccountMismatchError);
 
 /** InvalidAccountKey: Invalid account key */
 export class InvalidAccountKeyError extends ProgramError {
-  readonly name: string = 'InvalidAccountKey';
+  override readonly name: string = 'InvalidAccountKey';
 
   readonly code: number = 0x9; // 9
 
@@ -151,7 +151,7 @@ nameToErrorMap.set('InvalidAccountKey', InvalidAccountKeyError);
 
 /** NumericalOverflow: Numerical overflow */
 export class NumericalOverflowError extends ProgramError {
-  readonly name: string = 'NumericalOverflow';
+  override readonly name: string = 'NumericalOverflow';
 
   readonly code: number = 0xa; // 10
 
