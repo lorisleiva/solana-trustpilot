@@ -22,15 +22,10 @@ test('it can write a review to an existing domain', async (t) => {
 
   // When a reviewer writes a review for the domain.
   const reviewer = await generateSignerWithSol(umi);
-  const [reviewPda] = findReviewPda(umi, {
-    domain: domainPda,
-    reviewer: reviewer.publicKey,
-  });
   await writeReview(umi, {
     payer: reviewer,
     reviewer,
     domain: domainPda,
-    review: reviewPda,
     stars: 5,
     comment: 'Great stuff!',
   }).sendAndConfirm(umi);
@@ -46,6 +41,10 @@ test('it can write a review to an existing domain', async (t) => {
   });
 
   // And the Domain account was updated to include the new review.
+  const [reviewPda] = findReviewPda(umi, {
+    domain: domainPda,
+    reviewer: reviewer.publicKey,
+  });
   const reviewAccount = await fetchReview(umi, reviewPda);
   t.like(reviewAccount, <Review>{
     publicKey: reviewPda,
@@ -65,15 +64,10 @@ test('it cannot write a review for a missing domain', async (t) => {
   const reviewer = await generateSignerWithSol(umi);
   const domainName = 'missing.example.com';
   const [domainPda] = findDomainPda(umi, { domainName });
-  const [reviewPda] = findReviewPda(umi, {
-    domain: domainPda,
-    reviewer: reviewer.publicKey,
-  });
   const promise = writeReview(umi, {
     payer: reviewer,
     reviewer,
     domain: domainPda,
-    review: reviewPda,
     stars: 5,
     comment: 'Great stuff!',
   }).sendAndConfirm(umi);

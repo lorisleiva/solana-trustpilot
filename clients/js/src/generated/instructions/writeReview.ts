@@ -21,9 +21,11 @@ import {
   struct,
   u8,
 } from '@metaplex-foundation/umi/serializers';
+import { findReviewPda } from '../accounts';
 import {
   ResolvedAccount,
   ResolvedAccountsWithIndices,
+  expectPublicKey,
   getAccountMetasAndSigners,
 } from '../shared';
 
@@ -36,7 +38,7 @@ export type WriteReviewInstructionAccounts = {
   /** The domain PDA. Seeds: ['domain', domain string] */
   domain: PublicKey | Pda;
   /** The review PDA. Seeds: ['review', domain PDA, reviewer] */
-  review: PublicKey | Pda;
+  review?: PublicKey | Pda;
   /** The system program */
   systemProgram?: PublicKey | Pda;
 };
@@ -76,7 +78,7 @@ export type WriteReviewInstructionArgs = WriteReviewInstructionDataArgs;
 
 // Instruction.
 export function writeReview(
-  context: Pick<Context, 'payer' | 'programs'>,
+  context: Pick<Context, 'eddsa' | 'payer' | 'programs'>,
   input: WriteReviewInstructionAccounts & WriteReviewInstructionArgs
 ): TransactionBuilder {
   // Program ID.
@@ -104,6 +106,12 @@ export function writeReview(
   // Default values.
   if (!resolvedAccounts.payer.value) {
     resolvedAccounts.payer.value = context.payer;
+  }
+  if (!resolvedAccounts.review.value) {
+    resolvedAccounts.review.value = findReviewPda(context, {
+      domain: expectPublicKey(resolvedAccounts.domain.value),
+      reviewer: expectPublicKey(resolvedAccounts.reviewer.value),
+    });
   }
   if (!resolvedAccounts.systemProgram.value) {
     resolvedAccounts.systemProgram.value = context.programs.getPublicKey(

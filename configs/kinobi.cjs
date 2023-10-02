@@ -37,6 +37,13 @@ kinobi.update(
         },
       },
     },
+    writeReview: {
+      accounts: {
+        review: {
+          defaultsTo: k.pdaDefault("review"),
+        },
+      },
+    },
   })
 );
 
