@@ -8,16 +8,17 @@ test('it can create a new domain account', async (t) => {
   const umi = await createUmi();
 
   // When we create a new domain.
-  await createDomain(umi, { domainName: 'example.com' }).sendAndConfirm(umi);
+  const domainName = 'create-domain.example.com';
+  await createDomain(umi, { domainName }).sendAndConfirm(umi);
 
   // Then an account was created with the correct data.
-  const [domainPda] = findDomainPda(umi, { domainName: 'example.com' });
+  const [domainPda] = findDomainPda(umi, { domainName });
   t.like(await fetchDomain(umi, domainPda), <Domain>{
     publicKey: domainPda,
     key: Key.Domain,
     totalStars: 0n,
     totalReviews: 0n,
     reviewers: [] as PublicKey[],
-    domainName: 'example.com',
+    domainName: 'create-domain.example.com',
   });
 });
