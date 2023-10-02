@@ -53,6 +53,13 @@ kinobi.update(
         domainName: { type: k.stringTypeNode() },
       },
     },
+    deleteReview: {
+      accounts: {
+        domain: { defaultsTo: k.pdaDefault("domain") },
+        review: { defaultsTo: k.pdaDefault("review") },
+      },
+      args: {
+        domainName: { type: k.stringTypeNode() },
       },
     },
   })

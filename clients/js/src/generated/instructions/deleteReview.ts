@@ -20,9 +20,12 @@ import {
   struct,
   u8,
 } from '@metaplex-foundation/umi/serializers';
+import { findDomainPda, findReviewPda } from '../accounts';
 import {
   ResolvedAccount,
   ResolvedAccountsWithIndices,
+  expectPublicKey,
+  expectSome,
   getAccountMetasAndSigners,
 } from '../shared';
 
@@ -33,9 +36,9 @@ export type DeleteReviewInstructionAccounts = {
   /** The account reviewing the domain */
   reviewer: Signer;
   /** The domain PDA. Seeds: ['domain', domain string] */
-  domain: PublicKey | Pda;
+  domain?: PublicKey | Pda;
   /** The review PDA. Seeds: ['review', domain PDA, reviewer] */
-  review: PublicKey | Pda;
+  review?: PublicKey | Pda;
   /** The system program */
   systemProgram?: PublicKey | Pda;
 };
@@ -61,10 +64,16 @@ export function getDeleteReviewInstructionDataSerializer(): Serializer<
   ) as Serializer<DeleteReviewInstructionDataArgs, DeleteReviewInstructionData>;
 }
 
+// Extra Args.
+export type DeleteReviewInstructionExtraArgs = { domainName: string };
+
+// Args.
+export type DeleteReviewInstructionArgs = DeleteReviewInstructionExtraArgs;
+
 // Instruction.
 export function deleteReview(
-  context: Pick<Context, 'payer' | 'programs'>,
-  input: DeleteReviewInstructionAccounts
+  context: Pick<Context, 'eddsa' | 'payer' | 'programs'>,
+  input: DeleteReviewInstructionAccounts & DeleteReviewInstructionArgs
 ): TransactionBuilder {
   // Program ID.
   const programId = context.programs.getPublicKey(
@@ -73,7 +82,7 @@ export function deleteReview(
   );
 
   // Accounts.
-  const resolvedAccounts: ResolvedAccountsWithIndices = {
+  const resolvedAccounts = {
     payer: { index: 0, isWritable: true, value: input.payer ?? null },
     reviewer: { index: 1, isWritable: false, value: input.reviewer ?? null },
     domain: { index: 2, isWritable: true, value: input.domain ?? null },
@@ -83,11 +92,22 @@ export function deleteReview(
       isWritable: false,
       value: input.systemProgram ?? null,
     },
-  };
+  } satisfies ResolvedAccountsWithIndices;
 
   // Default values.
   if (!resolvedAccounts.payer.value) {
     resolvedAccounts.payer.value = context.payer;
+  }
+  if (!resolvedAccounts.domain.value) {
+    resolvedAccounts.domain.value = findDomainPda(context, {
+      domainName: expectSome(input.domainName),
+    });
+  }
+  if (!resolvedAccounts.review.value) {
+    resolvedAccounts.review.value = findReviewPda(context, {
+      domain: expectPublicKey(resolvedAccounts.domain.value),
+      reviewer: expectPublicKey(resolvedAccounts.reviewer.value),
+    });
   }
   if (!resolvedAccounts.systemProgram.value) {
     resolvedAccounts.systemProgram.value = context.programs.getPublicKey(

@@ -60,7 +60,7 @@ test('it cannot write a review for a missing domain', async (t) => {
   // Given a Umi instance.
   const umi = await createUmi();
 
-  // When a reviewer writes a review for a missing domain.
+  // When a reviewer tries to write a review for a missing domain.
   const reviewer = await generateSignerWithSol(umi);
   const promise = writeReview(umi, {
     payer: reviewer,
