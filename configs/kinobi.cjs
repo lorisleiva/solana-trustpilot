@@ -30,7 +30,13 @@ kinobi.update(
 // Update instructions.
 kinobi.update(
   new k.UpdateInstructionsVisitor({
-    // ...
+    createDomain: {
+      accounts: {
+        domain: {
+          defaultsTo: k.pdaDefault("domain"),
+        },
+      },
+    },
   })
 );
 

@@ -21,9 +21,11 @@ import {
   struct,
   u8,
 } from '@metaplex-foundation/umi/serializers';
+import { findDomainPda } from '../accounts';
 import {
   ResolvedAccount,
   ResolvedAccountsWithIndices,
+  expectSome,
   getAccountMetasAndSigners,
 } from '../shared';
 
@@ -32,7 +34,7 @@ export type CreateDomainInstructionAccounts = {
   /** The account paying for the storage fees */
   payer?: Signer;
   /** The domain PDA. Seeds: ['domain', domain string] */
-  domain: PublicKey | Pda;
+  domain?: PublicKey | Pda;
   /** The system program */
   systemProgram?: PublicKey | Pda;
 };
@@ -70,7 +72,7 @@ export type CreateDomainInstructionArgs = CreateDomainInstructionDataArgs;
 
 // Instruction.
 export function createDomain(
-  context: Pick<Context, 'payer' | 'programs'>,
+  context: Pick<Context, 'eddsa' | 'payer' | 'programs'>,
   input: CreateDomainInstructionAccounts & CreateDomainInstructionArgs
 ): TransactionBuilder {
   // Program ID.
@@ -96,6 +98,11 @@ export function createDomain(
   // Default values.
   if (!resolvedAccounts.payer.value) {
     resolvedAccounts.payer.value = context.payer;
+  }
+  if (!resolvedAccounts.domain.value) {
+    resolvedAccounts.domain.value = findDomainPda(context, {
+      domainName: expectSome(resolvedArgs.domainName),
+    });
   }
   if (!resolvedAccounts.systemProgram.value) {
     resolvedAccounts.systemProgram.value = context.programs.getPublicKey(
